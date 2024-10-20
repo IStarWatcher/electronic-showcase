@@ -1,91 +1,97 @@
 <template>
-	<!-- <div class="h-screen flex justify-center">
-		<div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-			<div class="flex flex-col space-y-2 text-center">
-				<h1 class="text-2xl font-semibold tracking-tight">
-					Авторизация
-				</h1>
-			</div>
-			<UserAuthForm />
-		</div>
-	</div> -->
 	<div class="h-screen flex justify-center items-center">
 		<form class="w-full max-w-sm" @submit.prevent="onSubmit">
-			<Card>
-				<CardHeader>
-					<CardTitle class="text-2xl">
-						Авторизация
-					</CardTitle>
-				</CardHeader>
-				<CardContent class="grid gap-4">
-					<div class="grid gap-2">
-						<Label for="email">Почта</Label>
+	  		<p>Форма авторизации</p>
+	  		<FormField v-slot="{ componentField }" name="email">
+				<FormItem>
+		  			<FormLabel>Почта</FormLabel>
+		  			<FormControl>
 						<Input
-							id="email"
-							type="email"
-							placeholder="m@example.com"
-							:rules="[() => !$v.form.email.$invalid || 'Введите корректный email']"
-							required
+			  				type="email"
+			  				placeholder="example@example.com"
+			  				v-bind="componentField"
 						/>
-					</div>
-					<div class="grid gap-2">
-						<Label for="password">Пароль</Label>
-						<Input id="password" type="password" required />
-					</div>
-				</CardContent>
-				<CardFooter>
-					<Button class="w-full" type="submit">
-						Войти
-					</Button>
-				</CardFooter>
-			</Card>
+		  			</FormControl>
+		  			<FormDescription> Введите свой адрес электронной почты. </FormDescription>
+		  			<FormMessage />
+				</FormItem>
+	  		</FormField>
+	  		<FormField v-slot="{ componentField }" name="password">
+				<FormItem>
+		  			<FormLabel>Пароль</FormLabel>
+		  			<FormControl>
+						<Input
+							type="password"
+							placeholder="********"
+							v-bind="componentField"
+						/>
+		  			</FormControl>
+		  			<FormDescription> Введите свой пароль. </FormDescription>
+		  			<FormMessage />
+				</FormItem>
+	  		</FormField>
+	  		<Button class="w-full" type="submit"> Войти </Button>
 		</form>
-	</div>
+  	</div>
 </template>
 
 <script>
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import z from "zod";
 
-/* import { required, email } from 'vuelidate/lib/validators' */
+import { Button } from "@/components/ui/button";
+import {
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 export default {
 	components: {
 		Button,
-		Card,
-		CardContent,
-		CardDescription,
-		CardFooter,
-		CardHeader,
-		CardTitle,
+		FormControl,
+		FormDescription,
+		FormField,
+		FormItem,
+		FormLabel,
+		FormMessage,
 		Input,
-		Label
-	},
-	data() {
+  	},
+  	data() {
 		return {
-			form: {
-				email: null,
-				password: null
-			}
+   	   		formSchema: toTypedSchema(
+				z.object({
+		 	 		email: z.string().email({ message: 'Неверный адрес электронной почты' }),
+		  			password: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(50),
+				})
+	 	 	),
+	  		form: useForm({
+				validationSchema: toTypedSchema(
+		  			z.object({
+						email: z.string().email({ message: 'Неверный адрес электронной почты' }),
+						password: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(50),
+		  			})
+				),
+	  		}),
+		};
+  	},
+	created() {
+		if (localStorage.getItem('isAuthenticated') === 'true') {
+	  		this.$router.push('/')
 		}
-	},
-	/* validation: {
-		form: {
-			email: {
-				required,
-				email
-			},
-			password: {
-				required
-			}
-		}
-	}, */
-	methods: {
+  	},
+  	methods: {
 		onSubmit() {
-			console.log(1);
+	  		this.form.handleSubmit(() => {
+				localStorage.setItem('isAuthenticated', 'true');
+				this.$router.push('/');
+	  		})();
 		}
-	}
-}
+  	}
+};
 </script>
