@@ -6,8 +6,7 @@
 		<Card
 			v-for="product in listProducts"
 			:key="product.id"
-			:image="product.image"
-			:product="product.title"
+			:product="product"
 		/>
 	</div>
 </template>

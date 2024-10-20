@@ -5,7 +5,7 @@ import Cart from '@/pages/cart.vue'
 
 const routes = [
 	{ path: '/', component: Home},
-    { path: '/authorization', component: Authorization},
+	{ path: '/authorization', component: Authorization},
 	{ path: '/cart', component: Cart}
 ]
 

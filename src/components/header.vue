@@ -1,7 +1,7 @@
 <template>
 	<header class="flex justify-between items-center p-5 border-b border-black">
 		<img
-			class="rounded-full max-w-12"
+			class="rounded-full max-w-12 cursor-pointer"
 			src="https://avatars.githubusercontent.com/u/124599?v=4"
 			alt="Логотип"
 			@click="movingHome"

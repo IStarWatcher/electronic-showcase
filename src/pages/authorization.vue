@@ -36,10 +36,6 @@
 </template>
 
 <script>
-import { useForm } from "vee-validate";
-import { toTypedSchema } from "@vee-validate/zod";
-import z from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
 	FormControl,
@@ -50,6 +46,10 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import z from "zod";
 
 export default {
 	components: {
@@ -67,14 +67,14 @@ export default {
    	   		formSchema: toTypedSchema(
 				z.object({
 		 	 		email: z.string().email({ message: 'Неверный адрес электронной почты' }),
-		  			password: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(50),
+		  			password: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(50, {message: 'Пароль должен содержать не больше 50 символов'}),
 				})
 	 	 	),
 	  		form: useForm({
 				validationSchema: toTypedSchema(
 		  			z.object({
 						email: z.string().email({ message: 'Неверный адрес электронной почты' }),
-						password: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(50),
+						password: z.string().min(8, {message: 'Пароль должен содержать не менее 8 символов'}).max(50, {message: 'Пароль должен содержать не больше 50 символов'}),
 		  			})
 				),
 	  		}),
@@ -82,7 +82,7 @@ export default {
   	},
 	created() {
 		if (localStorage.getItem('isAuthenticated') === 'true') {
-	  		this.$router.push('/')
+	  		this.$router.push('/');
 		}
   	},
   	methods: {
