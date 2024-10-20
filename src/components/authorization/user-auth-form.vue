@@ -11,17 +11,20 @@ export default {
     },
     data() {
         return {
-            isLoading: false
+            isLoading: false,
+			form: {
+				email: null,
+				password: null
+			}
         }
     },
     methods: {
         onSubmit() {
-	        event.preventDefault()
-	        isLoading.value = true
-
-	        setTimeout(() => {
-		        isLoading.value = false
-	        }, 3000)
+			this.isLoading = true;
+			setTimeout(()=> {
+				this.isLoading = false;
+			}, 3000)
+	        console.log(this.form.email);	
         }
     }
 }
@@ -29,22 +32,27 @@ export default {
 
 <template>
 	<div :class="{'grid gap-6': $attrs.class}">
-		<form @submit="onSubmit">
+		<form @submit.prevent="onSubmit">
 			<div class="grid gap-2">
 				<div class="grid gap-1">
 					<Label for="email">
 						Почта
 					</Label>
 					<Input
+						v-model="form.email"
+						id="email"
 						placeholder="name@example.com"
 						type="email"
+						:disabled="isLoading"
 					/>
                     <Label for="password">
 						Пароль
 					</Label>
                     <Input
-                    
+                    	v-model="form.password"
+						id="password"
 						type="password"
+						:disabled="isLoading"
 					/>
 				</div>
 				<Button :disabled="isLoading">
